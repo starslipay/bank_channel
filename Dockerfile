@@ -10,17 +10,17 @@ ENV GO111MODULE=on \
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-# 编译
-RUN go build -o bankchannel .
+# 编译(输出名显式指定, 避免被目录名/旧产物干扰)
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o bank_channel .
 
 # 运行镜像
 FROM alpine:3.19
 WORKDIR /app
-COPY --from=builder /app/bankchannel .
+COPY --from=builder /app/bank_channel .
 COPY --from=builder /app/etc ./etc
 # 时区：先切换为阿里云镜像源，解决国内访问 dl-cdn.alpinelinux.org SSL 失败问题
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     && apk add --no-cache tzdata
 ENV TZ=Asia/Shanghai
 EXPOSE 8080
-CMD ["./bankchannel", "-f", "./etc/bankchannel.yaml"]
+CMD ["./bank_channel", "-f", "./etc/bankchannel.yaml"]

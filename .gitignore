@@ -1,5 +1,6 @@
 # Binaries
 bankchannel
+bank_channel
 *.exe
 *.exe~
 *.dll

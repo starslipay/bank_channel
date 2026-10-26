@@ -1,0 +1,35 @@
+# Binaries
+
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Dependency directories
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Doc / notes
+*.md
+
+# Env
+.env
+.env.local
+
+# Build scripts (dev 用)
+dev_deploy.ps1
+dev_deploy.sh
+gen.ps1
