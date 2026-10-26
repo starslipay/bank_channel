@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package bank_channel;
+// 相对路径;包名
+option go_package = "./bank_channel_pb";
+
+// 获取充值提现单号Req
+message GetRechargeWithdrawNoReq {
+    int64 uid = 1;  // 用户UID(用于生成单号尾号)
+}
+
+// 获取充值提现单号Rsp
+message GetRechargeWithdrawNoRsp {
+    string transaction_id = 1;  // 充值提现单号
+}
+
+// 充值Req(mock接口, 不真实调用银行)
+message RechargeReq {
+    string transaction_id = 1; // 充值提现单号(由获取充值提现单号接口返回)
+    int64 amount = 2;          // 充值金额, 单位分
+    string bind_serial_no = 3; // 绑定序列号(绑卡序列号)
+}
+
+// 充值Rsp
+message RechargeRsp {
+    string transaction_id = 1;  // 充值提现单号
+}
+
+// 提现Req(mock接口, 不真实调用银行)
+message WithdrawReq {
+    string transaction_id = 1; // 充值提现单号(由获取充值提现单号接口返回)
+    int64 amount = 2;          // 提现金额, 单位分
+    string bind_serial_no = 3; // 绑定序列号(绑卡序列号)
+}
+
+// 提现Rsp
+message WithdrawRsp {
+    string transaction_id = 1;  // 充值提现单号
+}
+
+service BankChannel {
+    rpc GetRechargeWithdrawNo(GetRechargeWithdrawNoReq) returns (GetRechargeWithdrawNoRsp);
+    rpc Recharge(RechargeReq) returns (RechargeRsp);
+    rpc Withdraw(WithdrawReq) returns (WithdrawRsp);
+}
+
+/*
+生成项目框架
+goctl rpc protoc bank_channel.proto --go_out=. --go-grpc_out=. --zrpc_out=.
+*/
